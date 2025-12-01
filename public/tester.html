@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Probador de API - Zodiac Signs</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Courier New', monospace;
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #4ec9b0;
+        }
+
+        .content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .panel {
+            background: #252526;
+            border: 1px solid #3e3e42;
+            border-radius: 5px;
+            padding: 20px;
+        }
+
+        .panel h2 {
+            color: #4ec9b0;
+            margin-bottom: 15px;
+            font-size: 1.2em;
+        }
+
+        .test-section {
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #3e3e42;
+        }
+
+        .test-section:last-child {
+            border-bottom: none;
+        }
+
+        .test-section h3 {
+            color: #9cdcfe;
+            margin-bottom: 10px;
+            font-size: 1em;
+        }
+
+        .test-section p {
+            color: #858585;
+            font-size: 0.9em;
+            margin-bottom: 10px;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 8px;
+            background: #1e1e1e;
+            border: 1px solid #3e3e42;
+            color: #d4d4d4;
+            border-radius: 3px;
+            margin-bottom: 10px;
+            font-family: 'Courier New', monospace;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #4ec9b0;
+            background: #252526;
+        }
+
+        button {
+            background: #4ec9b0;
+            color: #1e1e1e;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 3px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background 0.3s;
+            width: 100%;
+        }
+
+        button:hover {
+            background: #3db89f;
+        }
+
+        button:active {
+            background: #2ca880;
+        }
+
+        .response {
+            background: #1e1e1e;
+            border: 1px solid #3e3e42;
+            border-radius: 3px;
+            padding: 15px;
+            overflow-x: auto;
+            max-height: 400px;
+            overflow-y: auto;
+            margin-top: 15px;
+        }
+
+        .response pre {
+            margin: 0;
+            white-space: pre-wrap;
+            word-break: break-word;
+            color: #ce9178;
+        }
+
+        .status {
+            padding: 10px;
+            border-radius: 3px;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .status.success {
+            background: #4ec9b0;
+            color: #1e1e1e;
+        }
+
+        .status.error {
+            background: #f48771;
+            color: #1e1e1e;
+        }
+
+        .status.loading {
+            background: #dcdcaa;
+            color: #1e1e1e;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .endpoints-list {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .endpoint-item {
+            background: #1e1e1e;
+            border: 1px solid #3e3e42;
+            padding: 15px;
+            border-radius: 3px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .endpoint-item:hover {
+            border-color: #4ec9b0;
+            background: #252526;
+        }
+
+        .endpoint-item h4 {
+            color: #4ec9b0;
+            margin-bottom: 5px;
+        }
+
+        .endpoint-item .method {
+            display: inline-block;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 0.85em;
+            font-weight: bold;
+            margin-right: 5px;
+        }
+
+        .method.get {
+            background: #569cd6;
+            color: white;
+        }
+
+        .method.post {
+            background: #4ec9b0;
+            color: #1e1e1e;
+        }
+
+        .endpoint-item .path {
+            color: #858585;
+            font-size: 0.9em;
+        }
+
+        @media (max-width: 1000px) {
+            .content {
+                grid-template-columns: 1fr;
+            }
+
+            .endpoints-list {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔮 Probador de API - Zodiac Sign API</h1>
+
+        <div class="content">
+            <!-- Panel de Pruebas -->
+            <div class="panel">
+                <h2>🧪 Endpoints Disponibles</h2>
+                
+                <div class="endpoints-list">
+                    <div class="endpoint-item" onclick="testGetSigns()">
+                        <h4>Todos los Signos</h4>
+                        <div><span class="method get">GET</span></div>
+                        <div class="path">/api/zodiac/signs</div>
+                    </div>
+
+                    <div class="endpoint-item" onclick="testZodiacForm()">
+                        <h4>Signo por Fecha</h4>
+                        <div><span class="method post">POST</span></div>
+                        <div class="path">/api/zodiac</div>
+                    </div>
+
+                    <div class="endpoint-item" onclick="testSignByName()">
+                        <h4>Signo por Nombre</h4>
+                        <div><span class="method get">GET</span></div>
+                        <div class="path">/api/zodiac/signs/:name</div>
+                    </div>
+
+                    <div class="endpoint-item" onclick="testCompatibility()">
+                        <h4>Compatibilidad</h4>
+                        <div><span class="method post">POST</span></div>
+                        <div class="path">/api/zodiac/compatibility</div>
+                    </div>
+                </div>
+
+                <hr style="border: none; border-top: 1px solid #3e3e42; margin: 20px 0;">
+
+                <div class="test-section">
+                    <h3>Obtener Signo por Fecha</h3>
+                    <p>POST /api/zodiac</p>
+                    <input type="date" id="birthDate" value="1990-05-15">
+                    <button onclick="testZodiacForm()">Probar</button>
+                </div>
+
+                <div class="test-section">
+                    <h3>Signo por Nombre</h3>
+                    <p>GET /api/zodiac/signs/:name</p>
+                    <input type="text" id="signName" value="Tauro" placeholder="Ej: Tauro, Leo, Virgo">
+                    <button onclick="testSignByName()">Probar</button>
+                </div>
+
+                <div class="test-section">
+                    <h3>Compatibilidad entre Signos</h3>
+                    <p>POST /api/zodiac/compatibility</p>
+                    <select id="sign1">
+                        <option value="Tauro">Tauro</option>
+                        <option value="Leo">Leo</option>
+                        <option value="Virgo">Virgo</option>
+                        <option value="Sagitario">Sagitario</option>
+                        <option value="Capricornio">Capricornio</option>
+                    </select>
+                    <select id="sign2">
+                        <option value="Virgo">Virgo</option>
+                        <option value="Leo">Leo</option>
+                        <option value="Tauro">Tauro</option>
+                        <option value="Sagitario">Sagitario</option>
+                        <option value="Capricornio">Capricornio</option>
+                    </select>
+                    <button onclick="testCompatibility()">Probar</button>
+                </div>
+            </div>
+
+            <!-- Panel de Respuestas -->
+            <div class="panel">
+                <h2>📊 Respuestas</h2>
+                
+                <div id="statusContainer"></div>
+                <div id="responseContainer" class="response" style="display: none;">
+                    <pre id="responseData"></pre>
+                </div>
+
+                <button onclick="clearResponse()" style="margin-top: 15px;">Limpiar</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:8000/api';
+
+        function showResponse(data, status = 'loading') {
+            const statusContainer = document.getElementById('statusContainer');
+            const responseContainer = document.getElementById('responseContainer');
+            const responseData = document.getElementById('responseData');
+
+            if (status === 'loading') {
+                statusContainer.innerHTML = '<div class="status loading">⏳ Cargando...</div>';
+                responseContainer.style.display = 'none';
+            } else if (status === 'success') {
+                statusContainer.innerHTML = '<div class="status success">✅ Éxito</div>';
+                responseContainer.style.display = 'block';
+                responseData.textContent = JSON.stringify(data, null, 2);
+            } else {
+                statusContainer.innerHTML = '<div class="status error">❌ Error</div>';
+                responseContainer.style.display = 'block';
+                responseData.textContent = data;
+            }
+        }
+
+        function clearResponse() {
+            document.getElementById('statusContainer').innerHTML = '';
+            document.getElementById('responseContainer').style.display = 'none';
+        }
+
+        async function testGetSigns() {
+            showResponse(null, 'loading');
+            try {
+                const response = await fetch(`${API_BASE}/zodiac/signs`);
+                const data = await response.json();
+                showResponse(data, 'success');
+            } catch (error) {
+                showResponse(error.message, 'error');
+            }
+        }
+
+        async function testZodiacForm() {
+            showResponse(null, 'loading');
+            const birthDate = document.getElementById('birthDate').value;
+            
+            if (!birthDate) {
+                showResponse('Por favor selecciona una fecha de nacimiento', 'error');
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE}/zodiac`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ birth_date: birthDate })
+                });
+                const data = await response.json();
+                showResponse(data, data.success ? 'success' : 'error');
+            } catch (error) {
+                showResponse(error.message, 'error');
+            }
+        }
+
+        async function testSignByName() {
+            showResponse(null, 'loading');
+            const signName = document.getElementById('signName').value;
+            
+            if (!signName) {
+                showResponse('Por favor ingresa un nombre de signo', 'error');
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE}/zodiac/signs/${signName}`);
+                const data = await response.json();
+                showResponse(data, data.success ? 'success' : 'error');
+            } catch (error) {
+                showResponse(error.message, 'error');
+            }
+        }
+
+        async function testCompatibility() {
+            showResponse(null, 'loading');
+            const sign1 = document.getElementById('sign1').value;
+            const sign2 = document.getElementById('sign2').value;
+
+            try {
+                const response = await fetch(`${API_BASE}/zodiac/compatibility`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ sign1, sign2 })
+                });
+                const data = await response.json();
+                showResponse(data, data.success ? 'success' : 'error');
+            } catch (error) {
+                showResponse(error.message, 'error');
+            }
+        }
+
+        // Mensaje de bienvenida
+        console.log('%c🔮 Zodiac Sign API Tester', 'font-size: 20px; color: #4ec9b0; font-weight: bold;');
+        console.log('%cLa API debe estar ejecutándose en http://localhost:8000', 'font-size: 12px; color: #d4d4d4;');
+    </script>
+</body>
+</html>
