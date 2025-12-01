@@ -1,1 +1,1 @@
-web: php -d variables_order=EGPCS -r "require '/app/public/index.php';"
+web: php -S 0.0.0.0:8080 -t public
