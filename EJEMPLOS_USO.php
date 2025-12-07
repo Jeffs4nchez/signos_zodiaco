@@ -86,7 +86,7 @@ if ($err) {
 Endpoint: GET /api/zodiac/signs/{sign}
 */
 
-$sign = "Tauro";
+$sign = "escorpio";
 
 $curl = curl_init();
 curl_setopt_array($curl, array(

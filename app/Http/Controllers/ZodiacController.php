@@ -5,7 +5,11 @@ namespace App\Http\Controllers;
 use App\Services\ZodiacService;
 use Illuminate\Http\Request;
 
-class ZodiacController extends Controller
+/**
+ * Controlador RESTful para Signos Zodiacales
+ * Extiende RestfulController para seguir estándares REST
+ */
+class ZodiacController extends RestfulController
 {
     protected ZodiacService $zodiacService;
 
@@ -17,16 +21,27 @@ class ZodiacController extends Controller
     /**
      * Obtiene el signo zodiacal de una persona
      * POST /api/zodiac
+     * 
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
      */
     public function getZodiac(Request $request)
     {
-        $validated = $request->validate([
-            'birth_date' => 'required|string'
-        ]);
+        try {
+            $validated = $request->validate([
+                'birth_date' => 'required|string'
+            ]);
 
-        $result = $this->zodiacService->getZodiacSign($validated['birth_date']);
+            $result = $this->zodiacService->getZodiacSign($validated['birth_date']);
 
-        return response()->json($result);
+            if (!$result['success']) {
+                return $this->errorResponse($result['message'], 400);
+            }
+
+            return $this->successResponse($result, 'Signo zodiacal obtenido correctamente', 200);
+        } catch (\Exception $e) {
+            return $this->errorResponse('Error al procesar la solicitud: ' . $e->getMessage(), 500);
+        }
     }
 
     /**
